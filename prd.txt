@@ -1,0 +1,220 @@
+# Overview
+The AI Agent Discovery Platform is a multilingual, feature-rich web platform for discovering, filtering, and comparing AI tools ("agents"). The platform helps users (businesses and individuals) find AI-based solutions tailored to their industry or role. It will serve as a searchable AI agent directory with affiliate monetization, similar to aiagentstore.ai, but improved with AI-enhanced semantic search, agent-guided chat assistant, and modern DevOps support via Docker.
+
+# Core Features
+## AI Agent Listing and Discovery
+- Comprehensive directory of AI agents categorized by industry, function, audience, etc.
+- Advanced filtering and sorting capabilities
+- Detailed agent profile pages with features, pricing, and user reviews
+- Comparison tool to evaluate multiple agents side-by-side
+
+## Semantic Search and AI Assistant
+- GPT-powered search assistant with semantic search capabilities
+- Natural language query processing using LangChain and pgvector
+- Personalized agent recommendations based on user needs
+- Conversational interface for guided discovery
+
+## User Authentication and Submissions
+- User registration and login via email and OAuth providers
+- Agent submission system for developers and companies
+- User profiles with saved agents and preferences
+- Rating and review system for community feedback
+
+## Agency Directory and Bidding System
+- Directory of AI development agencies
+- Premium listing and bidding system for agencies
+- Agency profile pages with portfolio and specializations
+- Contact and quote request functionality
+
+## Payment Processing
+- Stripe and PayPal integration for secure payments
+- Subscription management for premium listings
+- Affiliate link tracking and commission calculation
+- Transaction history and reporting
+
+## Multilingual Support
+- Fully localized user interface
+- Content translation for agent descriptions
+- Region-specific agent recommendations
+- Language preference settings
+
+## Admin Dashboard
+- Secure admin interface for content management
+- User and submission moderation tools
+- Analytics and reporting dashboard
+- Webhook integration for automation workflows
+
+# User Experience
+## User Personas
+1. **Business Decision Makers**: Looking for AI solutions to improve business processes
+2. **Individual Users**: Seeking personal productivity or creative AI tools
+3. **AI Developers**: Want to list their agents and reach potential customers
+4. **AI Agencies**: Offering development services for custom AI solutions
+5. **Platform Administrators**: Managing content and user submissions
+
+## Key User Flows
+1. **Discovery Flow**: Search, filter, and find relevant AI agents
+2. **Comparison Flow**: Evaluate and compare multiple agents
+3. **Submission Flow**: Submit new agents to the directory
+4. **Agency Bidding Flow**: Agencies bid for premium placement
+5. **Admin Moderation Flow**: Review and approve submissions
+
+## UI/UX Considerations
+- Clean, modern interface with Tailwind CSS
+- Mobile-responsive design for all pages (mobile first design)
+- Intuitive navigation and search functionality
+- Accessibility compliance (WCAG standards)
+- Dark/light mode toggle
+
+# Technical Architecture
+## System Components
+1. **Frontend**: Next.js (v14+) with TypeScript and Tailwind CSS
+2. **Backend**: Node.js API routes via Next.js or separate Express service
+3. **Database**: Supabase (PostgreSQL with pgvector extension)
+4. **Authentication**: Supabase Auth with email and OAuth providers
+5. **Search Engine**: OpenAI embeddings with pgvector for semantic search
+6. **Payment Processing**: Stripe and PayPal integrations
+7. **Storage**: Supabase Storage for images and assets
+8. **DevOps**: Docker and Docker Compose for development and testing
+
+## Data Models
+1. **Agents**: AI tools with metadata, features, pricing
+2. **Categories**: Hierarchical categorization system
+3. **Industries**: Industry-specific classifications
+4. **Tags**: Flexible tagging system for filtering
+5. **Users**: User profiles and authentication data
+6. **Agencies**: AI development company profiles
+7. **Transactions**: Payment and subscription records
+8. **Reviews**: User ratings and feedback
+9. **Embeddings**: Vector embeddings for semantic search
+
+## APIs and Integrations
+1. **OpenAI API**: For embeddings and AI assistant
+2. **Supabase API**: For database, auth, and storage
+3. **Stripe API**: For payment processing
+4. **PayPal API**: For alternative payment method
+5. **LangChain**: For RAG (Retrieval Augmented Generation)
+6. **Webhook Endpoints**: For automation with n8n or similar
+
+## Infrastructure Requirements
+1. **Docker**: Containerization for development
+2. **Docker Compose**: Service orchestration
+3. **Vercel**: Production deployment for frontend
+4. **Supabase**: Managed database, auth, and storage
+5. **OpenAI**: AI capabilities and embeddings
+6. **Stripe & PayPal**: Payment processing
+
+# Development Roadmap
+## Phase 1: Foundation Setup
+- Initialize project with Docker and Docker Compose
+- Set up Next.js frontend with Tailwind CSS
+- Configure Supabase connection and schema
+- Implement basic routing and page structure
+- Create core data models and database tables
+
+## Phase 2: Agent Listing and Discovery
+- Develop agent listing page with filters
+- Implement category and tag system
+- Create agent detail pages
+- Build basic search functionality
+- Design and implement UI components
+
+## Phase 3: User Authentication and Profiles
+- Integrate Supabase Auth
+- Create user registration and login flows
+- Develop user profile pages
+- Implement saved agents functionality
+- Set up role-based access control
+
+## Phase 4: Agent Submission System
+- Build agent submission form
+- Create moderation queue in admin panel
+- Implement approval workflow
+- Add edit and update capabilities
+- Develop notification system
+
+## Phase 5: Payment Integration
+- Set up Stripe and PayPal connections
+- Implement subscription management
+- Create payment flows for premium listings
+- Develop affiliate link tracking
+- Build transaction history and reporting
+
+## Phase 6: Semantic Search and AI Assistant
+- Integrate OpenAI embeddings
+- Set up pgvector for similarity search
+- Develop conversational search interface
+- Implement RAG with LangChain
+- Create personalized recommendation system
+
+## Phase 7: Agency Directory and Bidding
+- Build agency profile pages
+- Implement bidding system
+- Create agency discovery interface
+- Develop contact and quote request forms
+- Set up premium placement options
+
+## Phase 8: Admin Dashboard
+- Create secure admin interface
+- Build content management tools
+- Implement analytics dashboard
+- Set up webhook configuration
+- Develop system settings management
+
+## Phase 9: Multilingual Support and Optimization
+- Integrate next-i18next
+- Set up content translation workflow
+- Implement language preference settings
+- Optimize performance and SEO
+- Conduct accessibility improvements
+
+# Logical Dependency Chain
+1. **Foundation First**: Docker setup, Next.js configuration, Supabase connection
+2. **Core Data Layer**: Database schema, models, and basic CRUD operations
+3. **Basic UI**: Homepage, listing page, and detail page without advanced features
+4. **Authentication**: User registration and login system
+5. **Content Management**: Agent submission and admin approval system
+6. **Monetization**: Payment processing and subscription management
+7. **Advanced Features**: Semantic search, AI assistant, and recommendations
+8. **Agency Features**: Agency profiles, bidding, and premium placements
+9. **Optimization**: Multilingual support, performance improvements, and SEO
+
+# Risks and Mitigations
+## Technical Challenges
+- **Risk**: Complex semantic search implementation
+  **Mitigation**: Start with basic search and incrementally add AI capabilities
+
+- **Risk**: Integration complexity with multiple third-party services
+  **Mitigation**: Use well-documented libraries and implement proper error handling
+
+- **Risk**: Performance issues with large dataset
+  **Mitigation**: Implement pagination, caching, and database optimization
+
+## MVP Scope
+- **Risk**: Feature creep extending development timeline
+  **Mitigation**: Clearly define MVP features and prioritize core functionality
+
+- **Risk**: Overengineering initial implementation
+  **Mitigation**: Focus on simplicity and iterative development
+
+## Resource Constraints
+- **Risk**: Limited development resources
+  **Mitigation**: Leverage existing libraries and components when possible
+
+- **Risk**: API usage costs for OpenAI
+  **Mitigation**: Implement caching and rate limiting strategies
+
+# Appendix
+## Similar Platforms for Reference
+- aiagentstore.ai
+- futurepedia.io
+- toolify.ai
+- aitools.fyi
+
+## Technology Stack Details
+- Next.js 14+ with App Router
+- Tailwind CSS with component library (e.g., ShadCN UI)
+- Supabase with pgvector extension
+- Docker and Docker Compose for development
+- LangChain for RAG implementation
+- Stripe and PayPal for payment processing
