@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import AgentCard from '@/components/AgentCard'
+import TagFilter from '@/components/TagFilter'
 import { Agent } from '@/models/Agent'
 
 export default function AgentsPage() {
@@ -11,6 +12,7 @@ export default function AgentsPage() {
     category: '',
     priceType: '',
     rating: 0,
+    tags: [] as string[],
   })
 
   useEffect(() => {
@@ -168,9 +170,13 @@ export default function AgentsPage() {
     fetchAgents()
   }, [])
 
-  // Get unique categories from all agents
+  // Get unique categories and tags from all agents
   const categories = Array.from(
     new Set(agents.flatMap(agent => agent.categories))
+  ).sort()
+  
+  const tags = Array.from(
+    new Set(agents.flatMap(agent => agent.tags || []))
   ).sort()
 
   // Filter agents based on selected filters
@@ -188,6 +194,14 @@ export default function AgentsPage() {
     // Filter by minimum rating
     if (filters.rating > 0 && (!agent.rating || agent.rating.score < filters.rating)) {
       return false
+    }
+    
+    // Filter by tags
+    if (filters.tags.length > 0) {
+      const agentTags = agent.tags || []
+      if (!filters.tags.some(tag => agentTags.includes(tag))) {
+        return false
+      }
     }
     
     return true
@@ -259,10 +273,22 @@ export default function AgentsPage() {
                 </select>
               </div>
               
+              {/* Tags filter */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Tags
+                </label>
+                <TagFilter 
+                  tags={tags} 
+                  selectedTags={filters.tags} 
+                  onChange={(tags) => setFilters({ ...filters, tags })}
+                />
+              </div>
+              
               {/* Reset filters button */}
               <button
                 className="w-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-medium py-2 px-4 rounded-md"
-                onClick={() => setFilters({ category: '', priceType: '', rating: 0 })}
+                onClick={() => setFilters({ category: '', priceType: '', rating: 0, tags: [] })}
               >
                 Reset Filters
               </button>

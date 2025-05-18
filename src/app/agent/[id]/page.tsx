@@ -5,12 +5,31 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useParams } from 'next/navigation'
 import { Agent } from '@/models/Agent'
+import ReviewSection from '@/components/ReviewSection'
+import ReviewForm from '@/components/ReviewForm'
+
+interface Review {
+  id: string
+  userId: string
+  userName: string
+  userAvatar?: string
+  rating: number
+  title: string
+  content: string
+  createdAt: Date
+  updatedAt?: Date
+  helpful: number
+  notHelpful: number
+}
 
 export default function AgentDetailPage() {
-  const { id } = useParams()
+  const params = useParams()
+  const id = params?.id as string
   const [agent, setAgent] = useState<Agent | null>(null)
+  const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [showReviewForm, setShowReviewForm] = useState(false)
 
   useEffect(() => {
     // In a real app, this would fetch from the API
@@ -55,9 +74,49 @@ export default function AgentDetailPage() {
           updatedAt: new Date('2023-05-20'),
         }
         
+        // Mock reviews
+        const mockReviews: Review[] = [
+          {
+            id: '1',
+            userId: 'user1',
+            userName: 'John Doe',
+            userAvatar: 'https://via.placeholder.com/150',
+            rating: 5,
+            title: 'Excellent AI assistant',
+            content: 'This AI assistant has been a game-changer for my productivity. It understands my requests perfectly and provides helpful responses. The natural language understanding is impressive, and it can handle a wide range of tasks from writing to research. Highly recommended!',
+            createdAt: new Date('2023-06-15'),
+            helpful: 24,
+            notHelpful: 2,
+          },
+          {
+            id: '2',
+            userId: 'user2',
+            userName: 'Jane Smith',
+            rating: 4,
+            title: 'Very good but has some limitations',
+            content: 'Overall, I\'m impressed with this AI assistant. It handles most tasks well and the interface is intuitive. However, it sometimes struggles with complex requests or very specialized knowledge. The developers are responsive to feedback though, and it keeps improving. Worth the investment for the productivity gains.',
+            createdAt: new Date('2023-05-20'),
+            helpful: 18,
+            notHelpful: 3,
+          },
+          {
+            id: '3',
+            userId: 'user3',
+            userName: 'Robert Johnson',
+            userAvatar: 'https://via.placeholder.com/150',
+            rating: 5,
+            title: 'Best AI tool I\'ve used',
+            content: 'I\'ve tried many AI assistants, and this one stands out for its accuracy and ease of use. The multilingual support is excellent, and it integrates well with my existing workflow. Customer support is also top-notch when I had questions about advanced features.',
+            createdAt: new Date('2023-04-10'),
+            helpful: 32,
+            notHelpful: 1,
+          },
+        ]
+        
         // Simulate API delay
         setTimeout(() => {
           setAgent(mockAgent)
+          setReviews(mockReviews)
           setLoading(false)
         }, 500)
       } catch (err) {
@@ -69,6 +128,54 @@ export default function AgentDetailPage() {
 
     fetchAgent()
   }, [id])
+
+  const handleAddReview = () => {
+    setShowReviewForm(true)
+  }
+  
+  const handleCancelReview = () => {
+    setShowReviewForm(false)
+  }
+  
+  const handleSubmitReview = async (review: {
+    rating: number
+    title: string
+    content: string
+  }) => {
+    // In a real app, this would send the review to the API
+    // For now, we'll just add it to the local state
+    
+    const newReview: Review = {
+      id: `temp-${Date.now()}`,
+      userId: 'current-user',
+      userName: 'You',
+      rating: review.rating,
+      title: review.title,
+      content: review.content,
+      createdAt: new Date(),
+      helpful: 0,
+      notHelpful: 0,
+    }
+    
+    setReviews([newReview, ...reviews])
+    setShowReviewForm(false)
+    
+    // In a real app, we would also update the agent's rating
+    if (agent && agent.rating) {
+      const totalRatings = agent.rating.count + 1
+      const newScore = ((agent.rating.score * agent.rating.count) + review.rating) / totalRatings
+      
+      setAgent({
+        ...agent,
+        rating: {
+          score: newScore,
+          count: totalRatings,
+        },
+      })
+    }
+    
+    return Promise.resolve()
+  }
 
   if (loading) {
     return (
@@ -165,6 +272,19 @@ export default function AgentDetailPage() {
                   </span>
                 ))}
               </div>
+              
+              {agent.tags && agent.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {agent.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-0.5 rounded-full text-xs"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
           
@@ -174,6 +294,22 @@ export default function AgentDetailPage() {
               <div className="prose dark:prose-invert max-w-none">
                 <p className="text-gray-700 dark:text-gray-300">{agent.description}</p>
               </div>
+              
+              {agent.industries && agent.industries.length > 0 && (
+                <div className="mt-6">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Industries</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {agent.industries.map((industry) => (
+                      <span
+                        key={industry}
+                        className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full text-sm"
+                      >
+                        {industry}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
               
               <h2 className="text-xl font-semibold text-gray-900 dark:text-white mt-8 mb-4">Features</h2>
               <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -252,12 +388,22 @@ export default function AgentDetailPage() {
                   </div>
                 </div>
                 
-                <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700 space-y-3">
                   <button className="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium py-2 px-4 rounded-md flex items-center justify-center">
                     <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
                     </svg>
                     Save to favorites
+                  </button>
+                  
+                  <button 
+                    className="w-full bg-primary-600 hover:bg-primary-700 text-white font-medium py-2 px-4 rounded-md flex items-center justify-center"
+                    onClick={handleAddReview}
+                  >
+                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                    </svg>
+                    Write a review
                   </button>
                 </div>
               </div>
@@ -265,6 +411,23 @@ export default function AgentDetailPage() {
           </div>
         </div>
       </div>
+      
+      {/* Reviews section */}
+      {showReviewForm ? (
+        <div className="mt-12">
+          <ReviewForm 
+            agentId={agent.id} 
+            onSubmit={handleSubmitReview}
+            onCancel={handleCancelReview}
+          />
+        </div>
+      ) : (
+        <ReviewSection 
+          agentId={agent.id} 
+          reviews={reviews}
+          onAddReview={handleAddReview}
+        />
+      )}
     </div>
   )
 }

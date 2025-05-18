@@ -30,7 +30,7 @@ export default function AgentCard({ agent }: AgentCardProps) {
       
       <div className="flex justify-between items-center">
         {agent.categories && agent.categories.length > 0 && (
-          <span className="text-sm bg-primary-100 text-primary-800 px-2 py-1 rounded-full">
+          <span className="text-sm bg-primary-100 dark:bg-primary-900/30 text-primary-800 dark:text-primary-300 px-2 py-1 rounded-full">
             {agent.categories[0]}
           </span>
         )}
@@ -39,6 +39,21 @@ export default function AgentCard({ agent }: AgentCardProps) {
           View Details
         </Link>
       </div>
+      
+      {agent.tags && agent.tags.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-1">
+          {agent.tags.slice(0, 3).map((tag) => (
+            <span key={tag} className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-0.5 rounded-full">
+              {tag}
+            </span>
+          ))}
+          {agent.tags.length > 3 && (
+            <span className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 px-2 py-0.5 rounded-full">
+              +{agent.tags.length - 3} more
+            </span>
+          )}
+        </div>
+      )}
       
       {agent.rating && (
         <div className="mt-3 flex items-center">
